@@ -1,0 +1,2 @@
+rootProject.name='ImgExplore'
+include ':app'

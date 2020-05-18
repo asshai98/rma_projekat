@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="android.singidunum.ac.flickrapp.PhotoDetailActivity"
+    android:padding="5dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:foregroundGravity="center">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/photoTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/amaranth_bold"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="23sp"
+                    android:gravity="center"/>
+
+                <ImageView
+                    android:id="@+id/photoView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/baseline_photo_black_48dp" />
+
+                <TextView
+                    android:id="@+id/photoAuthor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:layout_marginTop="15dp"
+                    android:fontFamily="@font/amaranth_bold"
+                    android:textSize="15sp"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/photoDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:layout_marginTop="10dp"
+                    android:textSize="15sp"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/photoTags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:layout_marginTop="10dp"
+                    android:textSize="15sp"
+                    android:gravity="center"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </ScrollView>
+
+</RelativeLayout>
