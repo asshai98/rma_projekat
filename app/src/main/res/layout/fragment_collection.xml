@@ -5,10 +5,15 @@
     tools:context="android.singidunum.ac.flickrapp.CollectionFragment"
     android:background="@drawable/loginbackground">
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_fav"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+             <androidx.recyclerview.widget.RecyclerView
+                 android:id="@+id/recycler_view_fav"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
 </FrameLayout>

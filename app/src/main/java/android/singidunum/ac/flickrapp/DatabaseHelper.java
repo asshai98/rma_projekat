@@ -91,23 +91,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //citanje podataka
     public Cursor readAllFavourites(String user_email){
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "select * from favourites where user_email = user_email";
-        return db.rawQuery(sql, null, null);
+        Cursor cursor = db.rawQuery("Select * from favourites where user_email=?", new String[]{user_email});
+        return cursor;
     }
 
     //brisanje
     public void removeFromFavourites(String user_email){
         SQLiteDatabase db = this.getWritableDatabase();
-        String sql = "update favourites set fav_status='0' where user_email=?";
-        db.execSQL(sql);
+        ContentValues newContentValues = new ContentValues();
+        newContentValues.put("fav_status", "0");
+        String[] whereArgs = new String[] {String.valueOf(user_email)};
+        db.update("favourites", newContentValues, "user_email=?", whereArgs);
     }
 
     //selekcije svega iz liste ciji je fav_status = 1
-    public Cursor selectAllFromFavouriteList(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "select * from favourites where fav_status='1'";
-        return db.rawQuery(sql, null, null);
-    }
+    //public Cursor selectAllFromFavouriteList(){
+      //  SQLiteDatabase db = this.getReadableDatabase();
+      //  String sql = "select * from favourites where fav_status='1'";
+      //  return db.rawQuery(sql, null, null);
+ //   }
 
     //prikupljanje podataka korisnickih slika iz cameraroll sekcije
 

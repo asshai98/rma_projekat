@@ -29,6 +29,7 @@ public class CollectionFragment extends Fragment {
     private CollectionAdapter collectionAdapter;
     private String user;
     private ArrayList<FavItem> favItemArrayList = new ArrayList<>();
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     //fragment koji prikazuje kolekcije omiljenih slika koje korisnici prave
 
@@ -95,17 +96,27 @@ public class CollectionFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(collectionAdapter);
-        loadData();
+        loadData(user);
+
+        swipeRefreshLayout = v.findViewById(R.id.swipeRefresh2);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData(user);
+                swipeRefreshLayout.setRefreshing(false);
+
+            }
+        });
 
         return v;
     }
 
-    private  void loadData(){
+    private  void loadData(String username){
         if(favItemArrayList != null){
             favItemArrayList.clear();
         }
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
-        Cursor cursor = databaseHelper.selectAllFromFavouriteList();
+        Cursor cursor = databaseHelper.readAllFavourites(username);
         try{
             while(cursor.moveToNext()){
                 String title = cursor.getString(1);

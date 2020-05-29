@@ -72,6 +72,7 @@ public class AddPhotoActivity extends AppCompatActivity {
         try{
             dbHelper.storeImage(new ImageModelClass(imageTitle.getText().toString(), imageAuthor.getText().toString(), imageDescription.getText().toString(), imageToStore));
             Toast.makeText(this, "Successfuly added", Toast.LENGTH_SHORT).show();
+
         } catch (SQLiteException e){
             e.printStackTrace();
         }

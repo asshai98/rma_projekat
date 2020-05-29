@@ -1,6 +1,9 @@
 package android.singidunum.ac.flickrapp;
 
 import android.graphics.Bitmap;
+import android.util.Log;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class ImageModelClass {
     //klasa za slike koje ce korisnik moci da dodaje na svoj profil u cameraroll sekciji
@@ -19,7 +22,10 @@ public class ImageModelClass {
 
     public String getFavStatus() {
         return favStatus;
+
     }
+
+
 
     public void setFavStatus(String favStatus) {
         this.favStatus = favStatus;

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import java.util.ArrayList;
 
 public class CameraRecyclerViewAdapter extends RecyclerView.Adapter<CameraRecyclerViewAdapter.CameraViewHolder> {
@@ -24,6 +25,7 @@ public class CameraRecyclerViewAdapter extends RecyclerView.Adapter<CameraRecycl
     private static ArrayList<ImageModelClass> objectModelClassList;
     private static DatabaseHelper databaseHelper;
     private static Context context;
+
 
     public CameraRecyclerViewAdapter(ArrayList<ImageModelClass> objectModelClassList, Context context) {
         this.objectModelClassList = objectModelClassList;
@@ -46,6 +48,7 @@ public class CameraRecyclerViewAdapter extends RecyclerView.Adapter<CameraRecycl
         holder.uploadImage.setImageBitmap(objectModelClass.getImage());
         holder.uploadAuthor.setText(objectModelClass.getImageAuthor());
         holder.uploadDesc.setText(objectModelClass.getImageDescription());
+
         readCursorData(objectModelClass, holder);
 
     }
@@ -65,6 +68,7 @@ public class CameraRecyclerViewAdapter extends RecyclerView.Adapter<CameraRecycl
 
         Button addToFavourites = null;
 
+
         public CameraViewHolder(View itemView){
             super(itemView);
             this.uploadTitle = itemView.findViewById(R.id.uploadTitle);
@@ -83,6 +87,7 @@ public class CameraRecyclerViewAdapter extends RecyclerView.Adapter<CameraRecycl
                         databaseHelper.addFavourite(imageModel.getImageName(), imageModel.getImageAuthor(), imageModel.getFavStatus());
                         Toast.makeText(context, "Added to favoruties", Toast.LENGTH_SHORT).show();
                         addToFavourites.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+
                     } else {
                         imageModel.setFavStatus("0");
                         databaseHelper.removeFromFavourites(imageModel.getImageAuthor());

@@ -31,7 +31,7 @@ public class CameraRollFragment extends Fragment {
     DatabaseHelper databaseHelper;
     RecyclerView recyclerView;
     CameraRecyclerViewAdapter adapter;
-
+    SwipeRefreshLayout swipeRefreshLayout;
     String author;
 
 
@@ -84,6 +84,8 @@ public class CameraRollFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_camera_roll, container, false);
 
         recyclerView = v.findViewById(R.id.recycler_view_upload);
+        swipeRefreshLayout = v.findViewById(R.id.swipeRefresh1);
+
         databaseHelper = new DatabaseHelper(getContext());
 
         if(savedInstanceState == null) {
@@ -109,6 +111,19 @@ public class CameraRollFragment extends Fragment {
                 Intent i = new Intent(getContext(), AddPhotoActivity.class);
                 startActivity(i);
 
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                ArrayList<ImageModelClass> arrayList;
+                arrayList = databaseHelper.getAllImagesData(author);
+                CameraRecyclerViewAdapter cameraRecyclerViewAdapter = new CameraRecyclerViewAdapter(arrayList, getContext());
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setAdapter(cameraRecyclerViewAdapter);
+                cameraRecyclerViewAdapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
