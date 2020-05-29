@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 Boolean Checkemailpass = db.emailAndPasswdCheck(email,password);
                 if(Checkemailpass == true){
                     Toast.makeText(getApplicationContext(), "Successfuly logged in", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(v.getContext(), HomeActivity.class);
+                    Intent intent = new Intent(v.getContext(), HomeActivity.class).putExtra("email", email);
                     startActivity(intent);
                 } else {
                     Toast.makeText(getApplicationContext(), "Invalid credientals", Toast.LENGTH_SHORT).show();

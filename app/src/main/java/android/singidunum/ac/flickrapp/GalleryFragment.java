@@ -1,12 +1,21 @@
 package android.singidunum.ac.flickrapp;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +23,15 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -33,6 +49,16 @@ public class GalleryFragment extends Fragment implements GetJsonData.OnDataAvila
     private static final String TAG = "GalleryFragment";
     static final String PHOTO_TRANSFER = "PHOTO_TRANSFER";
     private ImageRecyclerViewAdapter imageRecyclerViewAdapter;
+
+    private static final int PERMISSIONS_REQUEST_CAMERA = 200;
+    private static final int PERMISSIONS_WRITE_EXTERNAL_STORAGE = 201;
+    private static final int IMAGE_REQUEST = 1;
+
+    private  String path = null;
+
+    String user;
+
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -99,7 +125,78 @@ public class GalleryFragment extends Fragment implements GetJsonData.OnDataAvila
         imageRecyclerViewAdapter = new ImageRecyclerViewAdapter(new ArrayList<Photo>(), getContext());
         recyclerView.setAdapter(imageRecyclerViewAdapter);
 
+        //dugme za kameru
+
+        FloatingActionButton buttonLaunchCamera = (FloatingActionButton) v.findViewById(R.id.fab);
+        buttonLaunchCamera.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSIONS_REQUEST_CAMERA);
+
+                }  else if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_WRITE_EXTERNAL_STORAGE);
+
+                } else {
+                    Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    File imageFile = null;
+                    try {
+                        imageFile = getImageFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    if(imageFile != null){
+                        Uri imageUri = FileProvider.getUriForFile(getContext(), "android.singidunum.ac.imgexplore", imageFile);
+                        i.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                        startActivityForResult(i, IMAGE_REQUEST);
+                    }
+                }
+            }
+        });
+
         return v;
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        switch(requestCode){
+            case PERMISSIONS_REQUEST_CAMERA: {
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Intent startCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(startCamera, PERMISSIONS_REQUEST_CAMERA);
+                } else {
+                    Log.d(TAG, "onRequestPermissionsResult: denied");
+                }
+                return;
+            }
+            case PERMISSIONS_WRITE_EXTERNAL_STORAGE: {
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+
+                    String file = path + ".jpg";
+                    File newFile = new File(file);
+
+                    try {
+                        newFile.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    Uri fileUri = Uri.fromFile(newFile);
+
+                    Intent startCameraFile = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+
+                    startCameraFile.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+
+                    startActivityForResult(startCameraFile, PERMISSIONS_WRITE_EXTERNAL_STORAGE);
+
+
+                }
+            }
+        }
     }
 
     //implementacije metoda onDataAvilable iz istog interfejsa
@@ -111,6 +208,15 @@ public class GalleryFragment extends Fragment implements GetJsonData.OnDataAvila
             //ukoliko download i procesiranje podataka fejluje
             Log.e(TAG, "onDownloadComplete failed with status: " + status );
         }
+    }
+
+    private File getImageFile() throws IOException{
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageName = "jpg_" + timeStamp + "_";
+        File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File imageFile = File.createTempFile(imageName, ".jpg", storageDir);
+        path = imageFile.getAbsolutePath();
+        return imageFile;
     }
 
 }

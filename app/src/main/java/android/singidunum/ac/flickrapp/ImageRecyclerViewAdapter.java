@@ -3,17 +3,22 @@ package android.singidunum.ac.flickrapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
+
 
 import java.util.List;
 
@@ -22,7 +27,7 @@ import static android.singidunum.ac.flickrapp.GalleryFragment.PHOTO_TRANSFER;
 class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecyclerViewAdapter.ImageViewHolder> {
 
     //adapter za rad sa recyclerview-om
-    private List<Photo> photoList;
+    private static List<Photo> photoList;
     private Context context;
 
     public ImageRecyclerViewAdapter(List<Photo> photoList, Context context) {
@@ -80,12 +85,20 @@ class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecyclerViewAda
     static class ImageViewHolder extends RecyclerView.ViewHolder{
         ImageView thumbnail = null;
         TextView title = null;
+        Button button = null;
 
         public ImageViewHolder(View itemView){
             super(itemView);
             this.thumbnail = (ImageView) itemView.findViewById(R.id.thumbnail);
             this.title = (TextView) itemView.findViewById(R.id.imageTitle);
+            this.button = (Button) itemView.findViewById(R.id.likeBtn);
 
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    button.setBackgroundResource(R.drawable.ic_thumb_up_yello_24dp);
+                }
+            });
         }
     }
 }

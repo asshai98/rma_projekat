@@ -3,6 +3,7 @@ package android.singidunum.ac.flickrapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Camera;
 import android.os.Bundle;
 
 
@@ -27,6 +28,8 @@ public class HomeActivity extends AppCompatActivity {
     private ProfileFragment profileFragment;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +52,8 @@ public class HomeActivity extends AppCompatActivity {
         exploreFragment = new ExploreFragment();
         profileFragment = new ProfileFragment();
 
+
+
         //setovanje viewPager-a i adaptera
 
         tabLayout.setupWithViewPager(viewPager);
@@ -57,9 +62,9 @@ public class HomeActivity extends AppCompatActivity {
         viewPagerAdapter.addFragment(galleryFragment, "Gallery");
         viewPagerAdapter.addFragment(exploreFragment, "Explore");
         viewPagerAdapter.addFragment(profileFragment, "Profile");
+
+
         viewPager.setAdapter(viewPagerAdapter);
-
-
 
     }
 

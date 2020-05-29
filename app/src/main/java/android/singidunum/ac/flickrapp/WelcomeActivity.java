@@ -48,7 +48,7 @@ public class WelcomeActivity extends AppCompatActivity {
         image.setAnimation(bottAnimation);
         message.setAnimation(topAnimation);
 
-        //handler za pokretanje novog intenta preko animacije, poruka i slika se animira na isti nacin kao i na welcome screen-u kako bi se stvorio efekat lagane tranzicije izmedju aktivnosti
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

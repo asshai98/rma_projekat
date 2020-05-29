@@ -58,7 +58,7 @@ public class Signup_form extends AppCompatActivity {
                             Boolean insert = db.insertData(forename, surname, email, passwd);
                             if(insert == true){
                                 Toast.makeText(getApplicationContext(), "Registered Successfuly", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(v.getContext(), HomeActivity.class);
+                                Intent intent = new Intent(v.getContext(), HomeActivity.class).putExtra("email", email);;
                                 startActivity(intent);
                             }
                         }

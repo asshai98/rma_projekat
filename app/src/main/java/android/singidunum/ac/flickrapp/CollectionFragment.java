@@ -1,8 +1,13 @@
 package android.singidunum.ac.flickrapp;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,12 +15,20 @@ import android.view.ViewGroup;
 
 import android.singidunum.ac.flickrapp.R;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link CollectionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class CollectionFragment extends Fragment {
+
+    private DatabaseHelper databaseHelper;
+    private RecyclerView recyclerView;
+    private CollectionAdapter collectionAdapter;
+    private String user;
+    private ArrayList<FavItem> favItemArrayList = new ArrayList<>();
 
     //fragment koji prikazuje kolekcije omiljenih slika koje korisnici prave
 
@@ -59,10 +72,54 @@ public class CollectionFragment extends Fragment {
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_collection, container, false);
+        View v = inflater.inflate(R.layout.fragment_collection, container, false);
+        databaseHelper = new DatabaseHelper(getContext());
+        recyclerView = v.findViewById(R.id.recycler_view_fav);
+
+        if(savedInstanceState == null) {
+            Bundle bundle = getActivity().getIntent().getExtras();
+            if(bundle == null){
+                user = null;
+            } else {
+                user = bundle.getString("email");
+            }
+        } else {
+            user = (String) savedInstanceState.getSerializable("email");
+        }
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(collectionAdapter);
+        loadData();
+
+        return v;
+    }
+
+    private  void loadData(){
+        if(favItemArrayList != null){
+            favItemArrayList.clear();
+        }
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        Cursor cursor = databaseHelper.selectAllFromFavouriteList();
+        try{
+            while(cursor.moveToNext()){
+                String title = cursor.getString(1);
+                String user = cursor.getString(2);
+                FavItem favItem = new FavItem(title, user);
+                favItemArrayList.add(favItem);
+            }
+        } finally {
+            if(cursor != null && cursor.isClosed())
+                cursor.close();
+            db.close();
+        }
+
+        collectionAdapter = new CollectionAdapter(getContext(), favItemArrayList);
+        recyclerView.setAdapter(collectionAdapter);
     }
 }

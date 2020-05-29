@@ -1,14 +1,23 @@
 package android.singidunum.ac.flickrapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.singidunum.ac.flickrapp.R;
+import android.widget.Button;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,6 +27,12 @@ import android.singidunum.ac.flickrapp.R;
 public class CameraRollFragment extends Fragment {
 
     //Fragment na kome ce se prikazivati slike koje korisnici ubacuju na profil
+
+    DatabaseHelper databaseHelper;
+    RecyclerView recyclerView;
+    CameraRecyclerViewAdapter adapter;
+
+    String author;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -60,10 +75,46 @@ public class CameraRollFragment extends Fragment {
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_camera_roll, container, false);
+
+        View v = inflater.inflate(R.layout.fragment_camera_roll, container, false);
+
+        recyclerView = v.findViewById(R.id.recycler_view_upload);
+        databaseHelper = new DatabaseHelper(getContext());
+
+        if(savedInstanceState == null) {
+            Bundle bundle = getActivity().getIntent().getExtras();
+            if(bundle == null){
+                author = null;
+            } else {
+                author = bundle.getString("email");
+            }
+        } else {
+            author = (String) savedInstanceState.getSerializable("email");
+        }
+
+        adapter = new CameraRecyclerViewAdapter(databaseHelper.getAllImagesData(author), getContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
+
+
+        FloatingActionButton btnAddPicture = (FloatingActionButton) v.findViewById(R.id.addPicture);
+        btnAddPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), AddPhotoActivity.class);
+                startActivity(i);
+
+            }
+        });
+
+
+        return v;
     }
+
+
 }

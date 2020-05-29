@@ -112,7 +112,6 @@ public class ExploreFragment extends Fragment implements GetJsonData.OnDataAvila
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if(query.length() > 0){
-                    //posto prvo obradjujemo query a zatim skidamo podatke koje prikazujemo unutar recyclerView-a,
                     //potrebno je da se uvek nad novom instacnom getJsonData izvrsi execute quer-ija, jer je GetJSONData asinhrona klasa,
                     //tako da ukoliko imamo istu instancu prakitcno bismo trazili da se pokrene vec pokrenuta nit prilikom skidanja podataka i doslo bi do izbacivanja nullpointer exep.
                     new GetJsonData("https://www.flickr.com/services/feeds/photos_public.gne", "en-us", true, ExploreFragment.this).execute(query);
